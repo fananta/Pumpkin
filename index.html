@@ -3,8 +3,38 @@
   <head>
     <meta charset="utf-8">
     <title>Topics</title>
+    <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+     <script type="text/javascript">	
+     	$(document).ready(function() {
+     	
+     		function reloadTopics() {
+				$.get('/topic', function(data) {
+					$("#topics").html("");
+					for(var prop in data) {
+						$("#topics").append("<li><a href='" + data[prop].link + "'>" 
+							+ data[prop].text + "</a></li>");
+					}
+	   			});
+	   		}
+	   		
+	   		$("#topicSubmit").click(function() {
+	   			$.post("/topic", $("#topicForm").serialize()).done(function(data) {
+					reloadTopics();
+				});
+         	});
+         	
+         	reloadTopics();
+   		});                                                                  
+	 </script> 
   </head>
   <body>
     <h1>Topics</h1>
+    <ul id="topics">
+    </ul>
+    <form id="topicForm" action="">
+  		Text: <input type="text" name="text"><br />
+    	Link: <input type="text" name="link">
+    	<input id="topicSubmit" type="submit" value="Submit">
+    </form>
   </body>
 </html>
