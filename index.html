@@ -17,7 +17,9 @@
 	   			});
 	   		}
 	   		
-	   		$("#topicSubmit").click(function() {
+	   		$("#topicForm").submit(function(event) {
+	   			event.preventDefault();
+	   			
 	   			$.post("/topic", $("#topicForm").serialize()).done(function(data) {
 					reloadTopics();
 				});
@@ -34,7 +36,7 @@
     <form id="topicForm" action="">
   		Text: <input type="text" name="text"><br />
     	Link: <input type="text" name="link">
-    	<input id="topicSubmit" type="submit" value="Submit">
+    	<input type="submit" value="Submit">
     </form>
   </body>
 </html>
