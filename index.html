@@ -8,7 +8,7 @@
         $(document).ready(function() {
         
             function reloadTopics() {
-                $.get('/topic', function(data) {
+                $.get('/topic/all', function(data) {
                     $("#topics").html("");
                     for(var prop in data) {
                         $("#topics").append("<li><a href='" + data[prop].link + "'>" 
@@ -20,7 +20,7 @@
             $("#topicForm").submit(function(event) {
                 event.preventDefault();
                 
-                $.post("/topic", $("#topicForm").serialize()).done(function(data) {
+                $.post("/topic/add", $("#topicForm").serialize()).done(function(data) {
                     reloadTopics();
                 });
             });
