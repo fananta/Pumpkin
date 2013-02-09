@@ -3,25 +3,57 @@ Pumpkin
 
 User moderated open commenting system
 
-# API #
+# API Endpoints #
 
-### POST topic ###
-Create a new topic. 
+## Get all topics - /topic/all ##
 
-Parameters: 
+#### Attributes ####
+|||
+|---|---|
+| **Path** | /topic/all |
+| **HTTP Method** | GET |
 
-* text: 140 character description. 
-* link: url for this topic.
- 
-Returns: new topic id.
+#### Parameters ####
+_None_
 
-Example: ```curl --data "text=Fun&link=http%3A%2F%2Freddit.com" http://127.0.0.1:31185/topic```
+#### Response ####
+JSON of all topics and replies.
 
-### GET topic ###
-Get a list of current topics. 
+||JSON format|
+|---|---|
+| **Topic** | ```{ "id": topic_id, "text": text, "link": link, "weight": 0, "replies": {} }``` |
+| **Reply** | ```{ "id": reply_id, "text": text, "votes": 0, "weight": 0, "replies": {}, "children_ids": [] }``` |
 
-Parameters: none.
- 
-Returns: list of current topics in JSON format.
+#### Example ####
+|||
+|---|---|
+| **Request** | ```$.post('http://127.0.0.1:8000/topic/all')``` |
+| **Response** | ```{"0":{"id":0,"text":"Cool search engine","link":"http://google.com","weight":0,```|
+||```"replies":{"1":{"id":1,"text":"just a reply","votes":0,"weight":0,"replies":{},"children_ids":[]}}}}``` |
 
-Example: ```curl http://127.0.0.1:31185/topic```
+## Add new topic - /topic/add ##
+|||
+|---|---|
+| **Path**     | /topic/add |
+| **HTTP Method**     | POST |
+
+#### Parameters ####
+|||
+|---|---|
+| **text** | 140 character maximum text |
+| **link** | URL |
+
+Format: ```/topic/add?text=yourtext&link=yourlink```
+
+#### Response ####
+JSON of topic added.
+
+||JSON format|
+|---|---|
+| **Topic** | ```{ "id": topic_id, "text": text, "link": link, "weight": 0, "replies": {} }``` |
+
+#### Example ####
+|||
+|---|---|
+| **Request** | ```$.post('http://127.0.0.1:8000/topic/add?text=yourtext&link=yourlink')``` |
+| **Response** | ```{"id":3,"text":"yourtext","link":"yourlink","weight":0,"replies":{}}```|
