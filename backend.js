@@ -18,6 +18,37 @@ var id = {
 /* all topics stored in an Object */
 var topics = {};
 
+/* helper to find parent of reply by parent_id */
+function _findParentReplyByID(topic_id, parent_id, reply_id) {
+    var replies = topics[topic_id].replies;
+
+    function _contains(dict, key) { return (typeof dict[key] !== "undefined"); }
+
+    function _searchForReply(replies, parent_id, reply_id) {
+        for (var key in replies) {
+            parent_id = parseInt(parent_id);
+
+            if (replies[key].children_ids.indexOf(parent_id) !== -1) {
+                //Push reply_id to children_ids array of ancestors and parent w/o duplicates
+                if (replies[key].children_ids.indexOf(reply_id) === -1) {
+                    replies[key].children_ids.push(reply_id);
+                }
+                return _searchForReply(replies[key].replies, parent_id, reply_id);
+            } else if (parseInt(key) === parent_id) {
+                return replies[parent_id];
+            }
+        }
+    }
+
+    if (_contains(replies, parent_id)) {
+        return replies[parent_id];
+    } else {
+       return _searchForReply(replies, parent_id, reply_id);
+    }
+
+    return false;
+}
+
 /* create a new topic and return its id */
 function newTopic(text, link) {
     var topic_id = id.getNext();
@@ -95,6 +126,12 @@ function propogateVote(topic_id, reply_id) {
 
 }
 
+//INCOMPLETE
+/* sort topics & replies by weight in non-ascending order */
+function sortData() {
+    return topics;
+}
+
 /* tests for rendering */
 function runTests() {
     console.log("*** Beginning of tests ***");
@@ -141,7 +178,7 @@ http.createServer(function(request, response) {
         /* GET /topic/all --> JSON of all topics */
         function getAllTopics(request, response) {
             _writeHead(response, 200, 'json');
-            _writeBody(response, JSON.stringify(topics));
+            _writeBody(response, JSON.stringify(sortData()));
         }
 
         /* POST /topic/add?text=XX&link=YY --> JSON of topic added */
@@ -250,37 +287,6 @@ http.createServer(function(request, response) {
             encoding = typeof encoding !== "undefined" ? encoding : "utf-8";
             response.write(body_content);
             response.end();
-        }
-
-        /* helper to find parent of reply by parent_id */
-        function _findParentReplyByID(topic_id, parent_id, reply_id) {
-            var replies = topics[topic_id].replies;
-
-            function _contains(dict, key) { return (typeof dict[key] !== "undefined"); }
-
-            function _searchForReply(replies, parent_id, reply_id) {
-                for (var key in replies) {
-                    parent_id = parseInt(parent_id);
-
-                    if (replies[key].children_ids.indexOf(parent_id) !== -1) {
-                        //Push reply_id to children_ids array of ancestors and parent w/o duplicates
-                        if (replies[key].children_ids.indexOf(reply_id) === -1) {
-                            replies[key].children_ids.push(reply_id);
-                        }
-                        return _searchForReply(replies[key].replies, parent_id, reply_id);
-                    } else if (parseInt(key) === parent_id) {
-                        return replies[parent_id];
-                    }
-                }
-            }
-
-            if (_contains(replies, parent_id)) {
-                return replies[parent_id];
-            } else {
-               return _searchForReply(replies, parent_id, reply_id);
-            }
-
-            return false;
         }
 
     }).listen(port);
