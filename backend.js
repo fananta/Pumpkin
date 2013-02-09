@@ -4,21 +4,21 @@ var http = require("http"),
     url = require("url"),
     querystring = require("querystring");
 
-/* Optionally set port using first command line arg, default=8000 */
+/* optionally set port using first command line arg, default=8000 */
 var args = process.argv.splice(2);
 var port = parseInt(args[0]);
 if (isNaN(port)) port = 8000;
 
-/* Singleton ID generator */
+/* singleton ID generator */
 var id = {
     next_id: 0,
     getNext: function() { return id.next_id++; }
 }
 
-/* All topics stored in an Object */
+/* all topics stored in an Object */
 var topics = {};
 
-/* Create a new topic and return its id */
+/* create a new topic and return its id */
 function newTopic(text, link) {
     var topic_id = id.getNext();
     var topic = {
@@ -33,7 +33,7 @@ function newTopic(text, link) {
     return topic_id;
 }
 
-/* Create a new reply to main topic and return its id */
+/* create a new reply to main topic and return its id */
 function newReplyToTopic(topic_id, text) {
     var reply_id = id.getNext();
     var reply = {
@@ -49,50 +49,50 @@ function newReplyToTopic(topic_id, text) {
     return reply_id;
 }
 
-function _findParentReplyByID(topic_id, parent_id, reply_id) {
-    var replies = topics[topic_id].replies;
 
-    function _contains(dict, key) { return (typeof dict[key] !== "undefined"); }
-
-    function _searchForReply(replies, parent_id, reply_id) {
-        for (var key in replies) {
-            parent_id = parseInt(parent_id);
-
-            if (replies[key].children_ids.indexOf(parent_id) !== -1) {
-                replies[key].children_ids.push(reply_id);
-                return _searchForReply(replies[key].replies, parent_id, reply_id);
-            } else if (parseInt(key) === parent_id) {
-                return replies[parent_id];
-            }
-        }
-    }
-
-    if (_contains(replies, parent_id)) {
-        return replies[parent_id];
-    } else {
-       return _searchForReply(replies, parent_id, reply_id);
-    }
-
-    return false;
-}
-
-/* Create a new reply to another reply and return its id */
+/* create a new reply to another reply and return its id */
 function newReplyToReply(topic_id, parent_id, text) {
-    var reply_id = id.getNext();
-    var reply = {
-        "id": reply_id,
-        "text": text,
-        "votes": 0,
-        "weight": 0,
-        "replies": {},
-        "children_ids": []
-    }
+    var reply_id = id.getNext(),
+        reply = {
+            "id": reply_id,
+            "text": text,
+            "votes": 0,
+            "weight": 0,
+            "replies": {},
+            "children_ids": []
+        }
 
     var parent_reply = _findParentReplyByID(topic_id, parent_id, reply_id);
     parent_reply.replies[reply_id] = reply;
     parent_reply.children_ids.push(reply_id);
 
     return reply_id;
+}
+
+/* upvote a reply and update the weight of topic and replies along the path */
+function propogateVote(topic_id, reply_id) {
+    //update weight of topic
+    topics[topic_id].weight++;
+
+    //update weight of parent replies (replies along the path)
+    var replies = topics[topic_id].replies;
+
+    //helper to perform recursive search
+    function _searchForReply(replies, reply_id) {
+        for (var key in replies) {
+            //if current reply (replies[key]) is a parent or ancestor of the voted reply (reply_id)
+            if (replies[key].children_ids.indexOf(parseInt(reply_id)) !== -1) {
+                replies[key].weight++;
+                _searchForReply(replies[key].replies, reply_id);
+            } else if (parseInt(key) === parseInt(reply_id))  {
+                replies[reply_id].weight++;
+                replies[reply_id].votes++;
+            }
+        }
+    }
+
+    _searchForReply(replies, reply_id);
+
 }
 
 /* tests for rendering */
@@ -125,7 +125,7 @@ http.createServer(function(request, response) {
         handle["/topic/add"] = addTopic;
         handle["/topic/reply/all"] = getAllReplies; //for specified topic
         handle["/topic/reply/add"] = addReply;
-        //handle["/topic/reply/upvote"] = upvoteReply;
+        handle["/topic/reply/upvote"] = upvoteReply;
 
         /***** ROUTER *****/
         if (typeof handle[pathname] === 'function') {
@@ -179,14 +179,13 @@ http.createServer(function(request, response) {
             }
         }
 
-        //INCOMPLETE
         /* POST /topic/reply/add?topicid=XX&parentid=YY&text=ZZ --> JSON of reply added */
         function addReply(request, response) {
-            var params = querystring.parse(query);
-            var topic_id = params.topicid;
-            var parent_id = params.parentid;
-            var reply_text = params.text;
-            var reply_id;
+            var params = querystring.parse(query),
+                topic_id = params.topicid,
+                parent_id = params.parentid,
+                reply_text = params.text,
+                reply_id;
 
             if (typeof parent_id === "undefined") {
                 reply_id = newReplyToTopic(topic_id, reply_text);
@@ -200,7 +199,19 @@ http.createServer(function(request, response) {
             }
         }
 
-        /* Serve page index.html */
+        /* POST /topic/reply/upvote?topicid=XX&replyid=YY --> nothing */
+        function upvoteReply(request, response) {
+            var params = querystring.parse(query),
+                topic_id = params.topicid,
+                reply_id = params.replyid;
+
+            propogateVote(topic_id, reply_id);
+
+            _writeHead(response, 200, 'text');
+            _writeBody(response, 'success');
+        }
+
+        /* serve page index.html */
         function displayIndex(request, response) {
             fs.readFile("./index.html", function(error, content) {
                     if (error) {
@@ -222,7 +233,7 @@ http.createServer(function(request, response) {
             _writeBody(response, error_msg);
         }
 
-        /* Helper for response.writeHead */
+        /* helper for response.writeHead */
         function _writeHead(response, html_code, content_type) {
             if (content_type === "plain" || content_type === "html") {
                 content_type = "text/" + content_type;
@@ -234,11 +245,42 @@ http.createServer(function(request, response) {
             response.writeHead(html_code, {"Content-Type": content_type});
         }
 
-        /* Helper for response.write */
+        /* helper for response.write */
         function _writeBody (response, body_content, encoding) {
             encoding = typeof encoding !== "undefined" ? encoding : "utf-8";
             response.write(body_content);
             response.end();
+        }
+
+        /* helper to find parent of reply by parent_id */
+        function _findParentReplyByID(topic_id, parent_id, reply_id) {
+            var replies = topics[topic_id].replies;
+
+            function _contains(dict, key) { return (typeof dict[key] !== "undefined"); }
+
+            function _searchForReply(replies, parent_id, reply_id) {
+                for (var key in replies) {
+                    parent_id = parseInt(parent_id);
+
+                    if (replies[key].children_ids.indexOf(parent_id) !== -1) {
+                        //Push reply_id to children_ids array of ancestors and parent w/o duplicates
+                        if (replies[key].children_ids.indexOf(reply_id) === -1) {
+                            replies[key].children_ids.push(reply_id);
+                        }
+                        return _searchForReply(replies[key].replies, parent_id, reply_id);
+                    } else if (parseInt(key) === parent_id) {
+                        return replies[parent_id];
+                    }
+                }
+            }
+
+            if (_contains(replies, parent_id)) {
+                return replies[parent_id];
+            } else {
+               return _searchForReply(replies, parent_id, reply_id);
+            }
+
+            return false;
         }
 
     }).listen(port);
