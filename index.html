@@ -3,40 +3,90 @@
   <head>
     <meta charset="utf-8">
     <title>Topics</title>
+
     <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
-     <script type="text/javascript">    
+    <script type="text/javascript"> 
+
         $(document).ready(function() {
-        
-            function reloadTopics() {
+
+            function refreshTopics() {
                 $.get('/topic/all', function(data) {
                     $("#topics").html("");
+                    var count = 0;
                     for(var prop in data) {
-                        $("#topics").append("<li><a href='" + data[prop].link + "'>" 
-                            + data[prop].text + "</a></li>");
+                        if (typeof data[prop].link !== "undefined") {
+                            link = data[prop].link.split(/\/\//);
+                            link = (link.length > 1) ? link[1] : link[0];
+                        }
+
+                        topic_html = 
+                            "<tr><td align='left'>" + ++count + ". </td>"
+                            + "<td topicid=" + data[prop].id + "><span class='title'><a href='" 
+                            + 'http://' + link + "'>" + data[prop].text + "</a></span> <span class='topic-link'>(" 
+                            + link + ")</span><br><span class='topic-subtext'>" + data[prop].weight 
+                            + " points | " + Object.keys(data[prop].replies).length + " replies </span></td></tr>"
+
+                        $("#topics").append(topic_html);
                     }
                 });
             }
             
-            $("#topicForm").submit(function(event) {
+            $("#addTopicForm").submit(function(event) {
                 event.preventDefault();
-                
-                $.post("/topic/add", $("#topicForm").serialize()).done(function(data) {
-                    reloadTopics();
-                });
+                var callbackurl = '/topic/add?' + $('#addTopicForm').serialize();
+                $.post(callbackurl).done(refreshTopics);
+
+                //clear form fields
+                $(this).find("input[type=text], text").val("Title");
+                $(this).find("input[type=text], link").val("Link");
             });
             
-            reloadTopics();
-        });                                                                  
-     </script> 
+            refreshTopics();
+        });
+
+    </script> 
+
   </head>
+
   <body>
-    <h1>Topics</h1>
-    <ul id="topics">
-    </ul>
-    <form id="topicForm" action="">
+    <center>
+        <table cellpadding="5%" border="0" width="85%">
+            <tbody>
+            <tr>
+                <td bgcolor="#ff6600">
+                    <span class="title">UofT News</span>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+    </center>
+
+    <center>
+        <table id="topics-table" cellpadding="10%" width="85%" border="0" bgcolor="#f6f6ef">
+            <tbody id="topics"></tbody>
+        </table>
+    </center>
+
+    <center>
+        <table cellpadding="20" border="0" width="85%">
+            <tbody>
+            <tr style="height: 60px;" bgcolor="#ff6600">
+                <td><center>
+                <form id="addTopicForm" action="">
+                    <input type="text" name="link" size="40" value="Link" style="height:20px; width:200px">
+                    <input type="text" name="text" size="60" maxlength="140" value="Title" style="height:20px; width:400px">
+                    <input type="submit" value="Submit a Link" style="width:100px;" valign="center">
+                </form></center>
+            </td>
+            </tr>
+        </tbody>
+        </table>
+    </center>
+
+    <!--<form id="addTopicForm" action="">
         Text: <input type="text" name="text"><br />
         Link: <input type="text" name="link">
         <input type="submit" value="Submit">
-    </form>
+    </form> -->
   </body>
 </html>
