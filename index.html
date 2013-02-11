@@ -21,11 +21,11 @@
 
         ol#topics {
             padding: 0px;
-            cursor: pointer;
+            cursor: pointer;i
         }
 
         li {
-            margin: 10px;
+            padding: 10px;
         }
 
         #wrapper {
@@ -62,11 +62,24 @@
                                 + " <span class='link'>(<a href='" + "http://" + link + "'>" + link + "</a>)</span><br />"
                                 + "<span class='subtext'>" + weight + " points | " 
                                 + Object.keys(replies).length + " replies</span></li>");
-                  
-                        var replies_el = $("<ol class='replies'></ol>");
-                        for (var k in replies) {
-                            replies_el.append("<li>" + replies[k].text + "</li>");
+
+                        function compileReplies(some_replies) {
+                            var reply_list = $("<ol></ol>");
+                            for (var k in some_replies) {
+                                var reply = $("<li>" + some_replies[k].text + "</li>");
+
+                                console.log(Object.keys(some_replies[k].replies).length);
+                                if (Object.keys(some_replies[k].replies).length > 0) {
+                                    reply.append(compileReplies(some_replies[k].replies));
+                                }
+                                reply_list.append(reply);
+                            }
+
+                            return reply_list;
                         }
+                        
+                        var replies_el = compileReplies(replies);
+                        replies_el.addClass('replies');
 
                         topic_el.append(replies_el);
                         replies_el.hide();

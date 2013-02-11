@@ -138,14 +138,14 @@ function runTests() {
 
     /* populate with test topics */
     newTopic("Cool search engine", "http://google.com"); //id = 1
-    //newTopic("Special domain", "http://example.com"); //id = 2
+    newTopic("Special domain", "http://example.com"); //id = 2
 
     /* add replies to topics */
     newReplyToTopic(0, "just a reply"); //id = 3
-    //newReplyToTopic(1, "oohhh.. i like this a lot"); //id = 4
+    newReplyToTopic(1, "oohhh.. i like this a lot"); //id = 4
 
-    //newReplyToReply(1, 3, "nest1"); //id = 5
-    //newReplyToReply(1, 3, "nest 2"); //id = 6
+    newReplyToReply(1, 3, "really?"); //id = 5
+    newReplyToReply(1, 3, "sure."); //id = 6
 
     console.log(topics);
     console.log("*** End of tests ***");
