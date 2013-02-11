@@ -3,6 +3,18 @@ Pumpkin
 
 User moderated open commenting system
 
+Arthors: Peter Le Bek
+peter@hyperplex.org
+
+Fahd Ananta
+f.ananta@gmail.com
+
+Xiwei Yin (Raymond)
+raymondxiwei@gmail.com
+
+Zheng Xiong (Lionheart)
+lionheart.xiong@gmail.com
+
 # API Endpoints #
 
 ## Get all topics - /topic/all ##
