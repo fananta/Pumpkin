@@ -29,6 +29,7 @@
 
                         topic_html = 
                             "<tr><td align='left'>" + ++count + ". </td>"
+							+ "<td align ='center'><a href="/topic/reply/upvote?topicid=" + id + "&replyid=" + id + "><img src="grayarrow.gif" width="10" height="10"></a></td>"
                             + "<td topicid=" + id + "><span class='title'><a href='" 
                             + 'http://' + link + "'>" + text + "</a></span> <span class='topic-link'>(" 
                             + link + ")</span><br><span class='topic-subtext'>" + weight 
@@ -48,7 +49,7 @@
                 $(this).find("input[type=text], text").val("Title");
                 $(this).find("input[type=text], link").val("Link");
             });
-            
+			
             refreshTopics();
         });
 
