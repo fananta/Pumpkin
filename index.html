@@ -5,8 +5,38 @@
     <title>Pumpkin - Open Commenting System</title>
 
     <style type="text/css">
-    *       { font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif;
-              font-size: 14px; color: #000; }
+        * {
+            font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif;
+            font-size: 14px;
+            color: #000; 
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        body {
+            text-align: center;
+        }
+
+        ol#topics {
+            padding: 0px;
+            cursor: pointer;
+        }
+
+        li {
+            margin: 10px;
+        }
+
+        #wrapper {
+            width: 700px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
     </style>
 
     <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
@@ -21,21 +51,31 @@
                     for(var prop in data) {
                         var id = data[prop].id,
                             text = data[prop].text,
-                            weight = data[prop].weight;
+                            weight = data[prop].weight,
+                            replies = data[prop].replies;
                         if (typeof data[prop].link !== "undefined") {
                             link = data[prop].link.split(/\/\//);
                             link = (link.length > 1) ? link[1] : link[0];
                         }
 
-                        topic_html = 
-                            "<tr><td align='left'>" + ++count + ". </td>"
-							+ "<td align ='center'><img src="grayarrow.gif" width="10" height="10"></td>"
-                            + "<td topicid=" + id + "><span class='title'><a href='" 
-                            + 'http://' + link + "'>" + text + "</a></span> <span class='topic-link'>(" 
-                            + link + ")</span><br><span class='topic-subtext'>" + weight 
-                            + " points | " + Object.keys(data[prop].replies).length + " replies </span></td></tr>"
+                        topic_el = $("<li class='topic'>" + text
+                                + " <span class='link'>(<a href='" + "http://" + link + "'>" + link + "</a>)</span><br />"
+                                + "<span class='subtext'>" + weight + " points | " 
+                                + Object.keys(replies).length + " replies</span></li>");
+                  
+                        var replies_el = $("<ol class='replies'></ol>");
+                        for (var k in replies) {
+                            replies_el.append("<li>" + replies[k].text + "</li>");
+                        }
 
-                        $("#topics").append(topic_html);
+                        topic_el.append(replies_el);
+                        replies_el.hide();
+
+                        topic_el.click(function() {
+                            $(this).find(".replies").slideToggle();
+                        });
+
+                        $("#topics").append(topic_el);
                     }
                 });
             }
@@ -46,8 +86,8 @@
                 $.post(callbackurl).done(refreshTopics);
 
                 //clear form fields
-                $(this).find("input[type=text], text").val("Title");
-                $(this).find("input[type=text], link").val("Link");
+                $(this).find("input[type=text], text").val("");
+                $(this).find("input[type=text], link").val("");
             });
 			
             refreshTopics();
@@ -58,40 +98,15 @@
   </head>
 
   <body>
-    <div class="content">
-    <center>
-        <table cellpadding="5%" border="0" width="85%">
-            <tbody>
-            <tr>
-                <td bgcolor="#ff6600">
-                    <span class="title">Pumpkin</span>
-                </td>
-            </tr>
-        </tbody>
-        </table>
-    </center>
-
-    <center>
-        <table id="topics-table" cellpadding="10%" width="85%" border="0" bgcolor="#f6f6ef">
-            <tbody id="topics"></tbody>
-        </table>
-    </center>
-
-    <center>
-        <table cellpadding="20" border="0" width="85%">
-            <tbody>
-            <tr style="height: 60px;" bgcolor="#ff6600">
-                <td><center>
-                <form id="addTopicForm" action="">
-                    <input type="text" name="link" size="40" value="Link" style="height:20px; width:200px">
-                    <input type="text" name="text" size="60" maxlength="140" value="Title" style="height:20px; width:400px">
-                    <input type="submit" value="Submit a Link" style="width:100px;" valign="center">
-                </form></center>
-            </td>
-            </tr>
-        </tbody>
-        </table>
-    </center>
-</div>
+    <div id="wrapper">
+      <h1>Pumpkin</h1>
+        <ol id="topics">
+        </ol>
+        <form id="addTopicForm" action="">
+            <input type="text" name="text" placeholder="Text">
+            <input type="text" name="link" placeholder="Link">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
   </body>
 </html>
