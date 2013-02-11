@@ -3,7 +3,8 @@ Pumpkin
 
 User moderated open commenting system
 
-Arthors: Peter Le Bek
+Arthors: [CDF account name to be added]
+Peter Le Bek
 peter@hyperplex.org
 
 Fahd Ananta
