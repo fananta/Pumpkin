@@ -17,14 +17,13 @@ Zheng Xiong (Lionheart)
 lionheart.xiong@gmail.com
 
 # User-Defined Objects and Data Structures # [formating incomplete]
-All topics and replies are stored in a tree-like structure
-||User-Defined Objects|
+#### All topics and replies are stored in a tree-like structure ####
+|||
 |---|---|
-| **Topics** | ```all topics are stored in an object``` |
-| **Topic** | ```topic is an object under topics with attributes: "id", "text", "link", "weight", "replies"``` |
-| **Replies** | ```all replies to a topic are stored in an object```|
-| **Reply** | ```reply is an object under replies with attributes: "id", "text", "votes", "weight", "replies", "children_ids"``` |
-|| ```Reply can have nested replies as children``` |
+| **Topics** | ```All topics are stored in an object``` |
+| **Topic** | ```Topic is an object under topics with attributes: "id", "text", "link", "weight", "replies"``` |
+| **Replies** | ```All replies to a topic are stored in an object```|
+| **Reply** | ```Reply is an object under replies with attributes: "id", "text", "votes", "weight", "replies", "children_ids"``` |
 
 # API Endpoints #
 
