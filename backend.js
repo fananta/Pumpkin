@@ -133,23 +133,23 @@ function sortData() {
 }
 
 /* tests for rendering */
-function runTests() {
-    console.log("*** Beginning of tests ***");
+// function runTests() {
+    // console.log("*** Beginning of tests ***");
 
-    /* populate with test topics */
-    newTopic("Cool search engine", "http://google.com"); //id = 1
-    newTopic("Special domain", "http://example.com"); //id = 2
+    // /* populate with test topics */
+    // newTopic("Cool search engine", "http://google.com"); //id = 1
+    // newTopic("Special domain", "http://example.com"); //id = 2
 
-    /* add replies to topics */
-    newReplyToTopic(0, "just a reply"); //id = 3
-    newReplyToTopic(1, "oohhh.. i like this a lot"); //id = 4
+    // /* add replies to topics */
+    // newReplyToTopic(0, "just a reply"); //id = 3
+    // newReplyToTopic(1, "oohhh.. i like this a lot"); //id = 4
 
-    newReplyToReply(1, 3, "really?"); //id = 5
-    newReplyToReply(1, 3, "sure."); //id = 6
+    // newReplyToReply(1, 3, "really?"); //id = 5
+    // newReplyToReply(1, 3, "sure."); //id = 6
 
-    console.log(topics);
-    console.log("*** End of tests ***");
-}
+    // console.log(topics);
+    // console.log("*** End of tests ***");
+// }
 
 http.createServer(function(request, response) {
 		var pathname = url.parse(request.url).pathname,
@@ -291,6 +291,6 @@ http.createServer(function(request, response) {
 
     }).listen(port);
 
-runTests();
+//runTests();
 console.log("Server running at http://127.0.0.1:" + port + "/");
 
