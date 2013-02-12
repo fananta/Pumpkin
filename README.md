@@ -16,7 +16,7 @@ raymondxiwei@gmail.com
 Zheng Xiong (Lionheart)
 lionheart.xiong@gmail.com
 
-# User-Defined Objects and Data Structures # [formating incomplete]
+# User-Defined Objects and Data Structures
 #### All topics and replies are stored in a tree-like structure ####
 |||
 |---|---|
