@@ -1,3 +1,17 @@
+TODO
+
+upvotes function - Peter
+
+need to sort on clientside - Peter
+
+comment for index.html - Peter and Lionheart
+
+need to create RESTurl test cases for upvotes - Lionheart
+
+need to download jQuery.min to our repository  - Lionheart
+
+need to finish documenetation for User-Defined Objects, what they actually do - Lionheart
+
 Pumpkin
 =======
 
