@@ -7,12 +7,13 @@
     <style type="text/css">
         * {
             font-family: Optima, Segoe, "Segoe UI", Candara, Calibri, Arial, sans-serif;
-            font-size: 14px;
+            font-size: 16px;
             color: #000; 
         }
 
         h1 {
             font-size: 24px;
+            color: rgb(230, 94, 22);
         }
 
         body {
@@ -39,11 +40,25 @@
         li {
             padding: 10px;
             margin: 10px 0px;
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(224, 141, 97, 0.05);
         }
 
         .replies li {
             margin: 10px;
+            font-size: 14px;
+        }
+
+        .topic .text {
+            font-weight: bold;
+        }
+
+        .topic, .topic a {
+            color: #666;
+        }
+
+        .subtext, .subtext button {
+            font-size: 12px;
+            color: #666;
         }
 
         #wrapper {
@@ -70,8 +85,8 @@
                 for (var k in some_replies) {
                     var reply = $("<li class='reply' data-replyid='" + some_replies[k].id + "'>" 
                                 + some_replies[k].text 
-                                + "<br/>" + some_replies[k].votes 
-                                + " votes | <button class='addReply'>add reply</button></li>");
+                                + "<br/><span class='subtext'>" + some_replies[k].votes 
+                                + " votes | <button class='addReply'>add reply</button></span></li>");
 
                     if (Object.keys(some_replies[k].replies).length > 0) {
                         reply.append(compileReplies(some_replies[k].replies));
@@ -139,9 +154,10 @@
 
                         topic_el = $("<li class='topic' data-topicid='" + id + "'>" 
                                 + "<span class='text'>" + text + "</span>"
-                                + " (<a href='" + "http://" + link + "'>" + link + "</a>)<br />" + weight + " points | " 
+                                + " (<a href='" + "http://" + link + "'>" + link + "</a>)<br />" 
+                                + "<span class='subtext'>" + weight + " points | " 
                                 + Object.keys(replies).length + " replies | "
-                                + "<button class='addReply'>add reply</button></li>");
+                                + "<button class='addReply'>add reply</button></span></li>");
                         
                         var replies_el = compileReplies(replies);
                         replies_el.addClass('replies');
