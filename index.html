@@ -162,7 +162,7 @@
             $(document).on("click", ".addReply", function() {
                 $(".addReplyForm").remove();
                 $(this).after(reply_form_html);
-                $(".addReplyForm").find("input[type=text], text").focus();
+                $(".addReplyForm").find("input[name=text]").focus();
             });
 
             $(document).on("click", ".topic > .text", function() {
@@ -193,6 +193,10 @@
                 var topic_id = topic.attr("data-topicid");
                 var parent_id = $(this).closest(".reply").attr("data-replyid");
 
+                if ($('.addReplyForm').find("input[name=text]").val().length == 0) {
+                    alert("Enter some text!");
+                    return;
+                }
                 var callbackurl = '/topic/reply/add?' + $('.addReplyForm').serialize() + "&topicid=" + topic_id;
 
                 if (typeof parent_id !== "undefined") {
@@ -246,12 +250,24 @@
             
             $("#addTopicForm").submit(function(event) {
                 event.preventDefault();
-                var callbackurl = '/topic/add?' + $('#addTopicForm').serialize();
+
+                if ($(this).find("input[name=text]").val().length > 140 || 
+                    $(this).find("input[name=text]").val().length == 0) {
+                    alert("Enter at most 140 characters of text.");
+                    return;
+                }
+
+                if ($(this).find("input[name=link]").val().length == 0) {
+                    alert("Enter a link!");
+                    return;
+                }
+
+                var callbackurl = '/topic/add?' + $(this).serialize();
                 $.post(callbackurl).done(refreshTopics);
 
                 //clear form fields
-                $(this).find("input[type=text], text").val("");
-                $(this).find("input[type=text], link").val("");
+                $(this).find("input[name=text]").val("");
+                $(this).find("input[type=link]").val("");
             });
 			
             refreshTopics();
