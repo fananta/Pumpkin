@@ -4,10 +4,10 @@ var http = require("http"),
     url = require("url"),
     querystring = require("querystring");
 
-/* optionally set port using first command line arg, default=8000 */
+/* optionally set port using first command line arg, default=30925 */
 var args = process.argv.splice(2);
 var port = parseInt(args[0]);
-if (isNaN(port)) port = 8000;
+if (isNaN(port)) port = 30925;
 
 /* singleton ID generator */
 var id = {

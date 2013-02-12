@@ -2,6 +2,7 @@ Pumpkin
 =======
 
 User moderated open commenting system
+running on Fahd's CDF port: 127.0.0.1:30925/
 
 Arthors: [CDF account name to be added]
 Peter Le Bek
@@ -49,7 +50,7 @@ JSON of all topics and replies.
 #### Example ####
 |||
 |---|---|
-| **Request** | ```$.get('http://127.0.0.1:8000/topic/all')``` |
+| **Request** | ```$.get('http://127.0.0.1:30925/topic/all')``` |
 | **Response** | ```{"0":{"id":0,"text":"Cool search engine","link":"http://google.com","weight":0,```|
 ||```"replies":{"1":{"id":1,"text":"just a reply","votes":0,"weight":0,"replies":{},"children_ids":[]}}}}``` |
 
@@ -77,7 +78,7 @@ JSON of topic added.
 #### Example ####
 |||
 |---|---|
-| **Request** | ```$.post('http://127.0.0.1:8000/topic/add?text=yourtext&link=yourlink')``` |
+| **Request** | ```$.post('http://127.0.0.1:30925/topic/add?text=yourtext&link=yourlink')``` |
 | **Response** | ```{"id":3,"text":"yourtext","link":"yourlink","weight":0,"replies":{}}```|
 
 ## Get all replies for a specified topic - /topic/reply/all##
@@ -103,7 +104,7 @@ JSON of all replies for specified topic.
 #### Example ####
 |||
 |---|---|
-| **Request** | ```$.get('http://127.0.0.1:8000/topic/reply/all?topicid=0')``` |
+| **Request** | ```$.get('http://127.0.0.1:30925/topic/reply/all?topicid=0')``` |
 | **Response** | ```{"1":{"id":1,"text":"just a reply","votes":0,"weight":0,"replies":{},"children_ids":[]}}```|
 
 ## Add a new reply - /topic/reply/add ##
@@ -131,7 +132,7 @@ JSON of all reply added.
 #### Example ####
 |||
 |---|---|
-| **Request** | ```$.post('http://127.0.0.1:8000/topic/reply/add?topicid=0&text=yourreplytext')``` |
+| **Request** | ```$.post('http://127.0.0.1:30925/topic/reply/add?topicid=0&text=yourreplytext')``` |
 | **Response** | ```{"id":4,"text":"yourreplytext","votes":0,"weight":0,"replies":{},"children_ids":[]}```|
 
 ## Vote for a reply - /topic/reply/upvote ##
@@ -158,5 +159,5 @@ Plain text: ```success```
 #### Example ####
 |||
 |---|---|
-| **Request** | ```$.post('http://127.0.0.1:8000/topic/reply/upvote?topicid=0&replyid=4')``` |
+| **Request** | ```$.post('http://127.0.0.1:30925/topic/reply/upvote?topicid=0&replyid=4')``` |
 | **Response** | ```success```|
