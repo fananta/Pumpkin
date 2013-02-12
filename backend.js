@@ -191,17 +191,6 @@ http.createServer(function(request, response) {
             _writeBody(response, 'success');
         }
 
-        /* POST /topic/upvote?topicid=XX --> nothing */
-        function upvoteTopic(request, response) {
-            var params = querystring.parse(query),
-                topic_id = params.topicid;
-
-            nodes[topic_id].vote++;
-
-            _writeHead(response, 200, 'text');
-            _writeBody(response, 'success');
-        }
-
         /* serve page index.html */
         function displayIndex(request, response) {
             fs.readFile("./index.html", function(error, content) {
