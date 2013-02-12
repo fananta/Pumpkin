@@ -13,3 +13,5 @@ http://127.0.0.1:30925/topic/reply/add?topicid=0&parentid=4&text=awesome
 http://127.0.0.1:30925/topic/reply/add?topicid=0&text=Titanium+¨C+a+Clojure+graph+library+built+on+top+of+Titan
 
 http://127.0.0.1:30925/topic/reply/add?topicid=1&text=Natural+Language+Processing+for+the+Working+Programmer
+
+//need to create RESTurl test cases for upvotes - Lionheart
