@@ -46,9 +46,13 @@
         }
 
         .upvote {
+            font-size: 12px;
             margin-right: 5px;
             color: rgba(0,0,0,0.3);
             cursor: pointer;
+            -webkit-user-select: none; /* Chrome/Safari */        
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* IE10+ */
         }
 
         .upvote:hover {
@@ -92,22 +96,67 @@
             + "<input type='submit' value='Submit'>"
             + "</form>";
 
-        function compileReplies(some_replies) {
-            var reply_list = $("<ol></ol>");
+        function appendReplies(parent, some_replies) {
                 for (var k in some_replies) {
                     var reply = $("<li class='reply' data-replyid='" + some_replies[k].id + "'>" 
                                 + "<span class='upvote'>&#9650;</span>" + some_replies[k].text 
                                 + "<br/><span class='subtext'>" + "<span class='numvotes'>" + some_replies[k].votes 
-                                + "</span> votes | <button class='addReply'>add reply</button></span></li>");
+                                + "</span> votes | <button class='addReply'>add reply</button></span>"
+                                + "<ol class='replies'></ol></li>");
 
                     if (Object.keys(some_replies[k].replies).length > 0) {
-                        reply.append(compileReplies(some_replies[k].replies));
+                        appendReplies(reply, some_replies[k].replies);
                     }
                 
-                    reply_list.append(reply);
+                    console.log(parent);
+                    parent.find(".replies").first().append(reply);
                 }
+        }
 
-            return reply_list;
+        function sortReplies(replies) {
+            var reply_lst = replies.children();
+
+            function compare(a, b) {
+                var weight_a = 0;
+                var weight_b = 0;
+
+                $(a).find('.numvotes').each(function() {
+                    weight_a += Number($(this).text());
+                });
+
+                $(b).find('.numvotes').each(function() {
+                    weight_b += Number($(this).text());
+                });
+
+                return weight_a < weight_b;
+            }
+
+            reply_lst.sort(compare);
+            console.log(reply_lst);
+            replies.html(reply_lst);
+        }
+
+        function sortTopics(topics) {
+
+            var topic_lst = topics.children();
+
+            function compare(a, b) {
+                var weight_a = 0;
+                var weight_b = 0;
+
+                $(a).find('.numvotes').each(function() {
+                    weight_a += Number($(this).text());
+                });
+
+                $(b).find('.numvotes').each(function() {
+                    weight_b += Number($(this).text());
+                });
+
+                return weight_a < weight_b;
+            }
+
+            topic_lst.sort(compare);
+            topics.html(topic_lst);
         }
 
         $(document).ready(function() {
@@ -116,6 +165,10 @@
                 $(".addReplyForm").remove();
                 $(this).after(reply_form_html);
                 $(".addReplyForm").find("input[type=text], text").focus();
+            });
+
+            $(document).on("click", ".topic > .text", function() {
+                $(this).parent().find(".replies").first().slideToggle();
             });
 
             $(document).on("click", ".upvote", function() {
@@ -129,6 +182,9 @@
                 $.post(callbackurl).done(function(data) {
                     var old = parseInt(reply.find(".numvotes").first().text());
                     reply.find(".numvotes").first().text(old+1);
+
+                    topic.find(".replies").each(function() { sortReplies($(this)); });
+                    sortTopics($("#topics"));
                 });
             });
 
@@ -147,17 +203,16 @@
                 }
 
                 $.post(callbackurl).done(function(data) {
-                    var replies_el = compileReplies({"1" : data});
-                    replies_el.addClass('replies'); 
+                    appendReplies(parent, {"1" : data});
 
-                    var replies = topic.find(".replies");
+                    /*var replies = topic.find(".replies");
                     if (!replies.is(":visible")) {
                         topic.find(".replies").slideDown();
                     }
  
                     replies_el.hide();
                     parent.append(replies_el);
-                    replies_el.slideDown();       
+                    replies_el.slideDown();*/     
                 });
 
                 // remove form
@@ -171,7 +226,6 @@
                     for(var prop in data) {
                         var id = data[prop].id,
                             text = data[prop].text,
-                            weight = data[prop].weight,
                             replies = data[prop].replies;
                         if (typeof data[prop].link !== "undefined") {
                             link = data[prop].link.split(/\/\//);
@@ -179,24 +233,21 @@
                         }
 
                         topic_el = $("<li class='topic' data-topicid='" + id + "'>" 
-                                + "<span class='upvote'>&#9650;</span><span class='text'>" + text + "</span>"
+                                + "<span class='text'>" + text + "</span>"
                                 + " (<a href='" + "http://" + link + "'>" + link + "</a>)<br />" 
-                                + "<span class='subtext'>" + weight + " points | " 
+                                + "<span class='subtext'>" 
                                 + Object.keys(replies).length + " replies | "
-                                + "<button class='addReply'>add reply</button></span></li>");
+                                + "<button class='addReply'>add reply</button></span>"
+                                + "<ol class='replies'></ol></li>");
                         
-                        var replies_el = compileReplies(replies);
-                        replies_el.addClass('replies');
+                        appendReplies(topic_el, replies);
+                        topic_el.find(".replies").each(function() { sortReplies($(this)); });
 
-                        topic_el.append(replies_el);
-                        replies_el.hide();
-
-                        topic_el.find(".text").click(function() {
-                            $(this).parent().find(".replies").slideToggle();
-                        });
-
+                        topic_el.find(".replies").first().hide();
                         $("#topics").append(topic_el);
                     }
+
+                    sortTopics($("#topics"));
                 });
             }
             
@@ -213,7 +264,7 @@
             refreshTopics();
         });
 
-    </script> 
+    </script>
 
   </head>
 
