@@ -206,6 +206,9 @@
                 $.post(callbackurl).done(function(data) {
                     appendReplies(parent, {"1" : data});
 
+                    var old = parseInt(topic.find(".numreplies").first().text());
+                    topic.find(".numreplies").first().text(old+1);
+
                     var replies = topic.find(".replies").first();
                     if (!replies.is(":visible")) {
                         topic.find(".replies").slideDown();
@@ -232,8 +235,7 @@
                         topic_el = $("<li class='topic' data-topicid='" + id + "'>" 
                                 + "<span class='text'>" + text + "</span>"
                                 + " (<a href='" + "http://" + link + "'>" + link + "</a>)<br />" 
-                                + "<span class='subtext'>" 
-                                + Object.keys(replies).length + " replies | "
+                                + "<span class='subtext'><span class='numreplies'></span> replies | "
                                 + "<button class='addReply'>add reply</button></span>"
                                 + "<ol class='replies'></ol></li>");
                         
@@ -241,6 +243,7 @@
                         topic_el.find(".replies").each(function() { sortReplies($(this)); });
 
                         topic_el.find(".replies").first().hide();
+                        topic_el.find(".numreplies").text(topic_el.find(".reply").size());
                         $("#topics").append(topic_el);
                     }
 
