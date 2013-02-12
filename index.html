@@ -66,7 +66,7 @@
             color: #666;
         }
 
-        .subtext, .subtext button {
+        .subtext, .subtext button, .subtext span {
             font-size: 12px;
             color: #666;
         }
@@ -95,8 +95,8 @@
                 for (var k in some_replies) {
                     var reply = $("<li class='reply' data-replyid='" + some_replies[k].id + "'>" 
                                 + "<span class='upvote'>&#9650;</span>" + some_replies[k].text 
-                                + "<br/><span class='subtext'>" + some_replies[k].votes 
-                                + " votes | <button class='addReply'>add reply</button></span></li>");
+                                + "<br/><span class='subtext'>" + "<span class='numvotes'>" + some_replies[k].votes 
+                                + "</span> votes | <button class='addReply'>add reply</button></span></li>");
 
                     if (Object.keys(some_replies[k].replies).length > 0) {
                         reply.append(compileReplies(some_replies[k].replies));
@@ -116,12 +116,26 @@
                 $(".addReplyForm").find("input[type=text], text").focus();
             });
 
+            $(document).on("click", ".upvote", function() {
+                var reply = $(this).closest(".reply");
+                var reply_id = reply.attr("data-replyid");
+                var topic = $(this).closest(".topic");
+                var topic_id = topic.attr("data-topicid");
+
+                var callbackurl = '/topic/reply/upvote?' + "topicid=" + topic_id + "&replyid=" + reply_id;
+
+                $.post(callbackurl).done(function(data) {
+                    var old = parseInt(reply.find(".numvotes").first().text());
+                    reply.find(".numvotes").first().text(old+1);
+                });
+            });
+
             $(document).on("submit", ".addReplyForm", function(event) {
                 event.preventDefault();
 
                 var parent = $(this).closest("li");
                 var topic = $(this).closest(".topic");
-                var topic_id = topic.attr("data-topicid")
+                var topic_id = topic.attr("data-topicid");
                 var parent_id = $(this).closest(".reply").attr("data-replyid");
 
                 var callbackurl = '/topic/reply/add?' + $('.addReplyForm').serialize() + "&topicid=" + topic_id;
