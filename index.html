@@ -43,6 +43,16 @@
             background-color: rgba(224, 141, 97, 0.05);
         }
 
+        .upvote {
+            margin-right: 5px;
+            color: rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        .upvote:hover {
+            color: rgba(0,0,0,0.5);
+        }
+
         .replies li {
             margin: 10px;
             font-size: 14px;
@@ -84,7 +94,7 @@
             var reply_list = $("<ol></ol>");
                 for (var k in some_replies) {
                     var reply = $("<li class='reply' data-replyid='" + some_replies[k].id + "'>" 
-                                + some_replies[k].text 
+                                + "<span class='upvote'>&#9650;</span>" + some_replies[k].text 
                                 + "<br/><span class='subtext'>" + some_replies[k].votes 
                                 + " votes | <button class='addReply'>add reply</button></span></li>");
 
@@ -153,7 +163,7 @@
                         }
 
                         topic_el = $("<li class='topic' data-topicid='" + id + "'>" 
-                                + "<span class='text'>" + text + "</span>"
+                                + "<span class='upvote'>&#9650;</span><span class='text'>" + text + "</span>"
                                 + " (<a href='" + "http://" + link + "'>" + link + "</a>)<br />" 
                                 + "<span class='subtext'>" + weight + " points | " 
                                 + Object.keys(replies).length + " replies | "
