@@ -158,10 +158,9 @@ JSON of all reply added.
 #### Parameters ####
 |||
 |---|---|
-| **topicid** | Valid existing topic ID |
 | **replyid** | ID of reply for which the vote is being registered |
 
-Format: ```/topic/reply/upvote?topicid=XX&replyid=YY```
+Format: ```/topic/reply/upvote?replyid=YY```
 
 #### Response ####
 Plain text: ```success```

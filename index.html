@@ -173,9 +173,8 @@
                 var reply = $(this).closest(".reply");
                 var reply_id = reply.attr("data-replyid");
                 var topic = $(this).closest(".topic");
-                var topic_id = topic.attr("data-topicid");
 
-                var callbackurl = '/topic/reply/upvote?' + "topicid=" + topic_id + "&replyid=" + reply_id;
+                var callbackurl = '/topic/reply/upvote?' + "replyid=" + reply_id;
 
                 $.post(callbackurl).done(function(data) {
                     var old = parseInt(reply.find(".numvotes").first().text());
@@ -203,14 +202,10 @@
                 $.post(callbackurl).done(function(data) {
                     appendReplies(parent, {"1" : data});
 
-                    /*var replies = topic.find(".replies");
+                    var replies = topic.find(".replies").first();
                     if (!replies.is(":visible")) {
                         topic.find(".replies").slideDown();
-                    }
- 
-                    replies_el.hide();
-                    parent.append(replies_el);
-                    replies_el.slideDown();*/     
+                    }  
                 });
 
                 // remove form

@@ -179,10 +179,9 @@ http.createServer(function(request, response) {
             }
         }
 
-        /* POST /topic/reply/upvote?topicid=XX&replyid=YY --> nothing */
+        /* POST /topic/reply/upvote?replyid=YY --> nothing */
         function upvoteReply(request, response) {
             var params = querystring.parse(query),
-                topic_id = params.topicid,
                 reply_id = params.replyid;
 
             nodes[reply_id].votes++;
