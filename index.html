@@ -108,7 +108,6 @@
                         appendReplies(reply, some_replies[k].replies);
                     }
                 
-                    console.log(parent);
                     parent.find(".replies").first().append(reply);
                 }
         }
@@ -132,7 +131,6 @@
             }
 
             reply_lst.sort(compare);
-            console.log(reply_lst);
             replies.html(reply_lst);
         }
 
