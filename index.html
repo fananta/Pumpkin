@@ -19,13 +19,31 @@
             text-align: center;
         }
 
-        ol#topics {
-            padding: 0px;
-            cursor: pointer;i
+        button {
+            background: none;
+            border: none;   
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
         }
+
+        ol {
+            padding-left: 0px;
+            list-style-type: none;
+        }
+
+        li.topic .text {
+           cursor: pointer;
+        }  
 
         li {
             padding: 10px;
+            margin: 10px 0px;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .replies li {
+            margin: 10px;
         }
 
         #wrapper {
@@ -42,7 +60,67 @@
     <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
     <script type="text/javascript"> 
 
+        var reply_form_html = "<form class='addReplyForm' action=''>" 
+            + "<input type='text' name='text' placeholder='Reply'>"
+            + "<input type='submit' value='Submit'>"
+            + "</form>";
+
+        function compileReplies(some_replies) {
+            var reply_list = $("<ol></ol>");
+                for (var k in some_replies) {
+                    var reply = $("<li class='reply' data-replyid='" + some_replies[k].id + "'>" 
+                                + some_replies[k].text 
+                                + "<br/>" + some_replies[k].votes 
+                                + " votes | <button class='addReply'>add reply</button></li>");
+
+                    if (Object.keys(some_replies[k].replies).length > 0) {
+                        reply.append(compileReplies(some_replies[k].replies));
+                    }
+                
+                    reply_list.append(reply);
+                }
+
+            return reply_list;
+        }
+
         $(document).ready(function() {
+
+            $(document).on("click", ".addReply", function() {
+                $(".addReplyForm").remove();
+                $(this).after(reply_form_html);
+            });
+
+            $(document).on("submit", ".addReplyForm", function(event) {
+                event.preventDefault();
+
+                var parent = $(this).closest("li");
+                var topic = $(this).closest(".topic");
+                var topic_id = topic.attr("data-topicid")
+                var parent_id = $(this).closest(".reply").attr("data-replyid");
+
+                var callbackurl = '/topic/reply/add?' + $('.addReplyForm').serialize() + "&topicid=" + topic_id;
+
+                if (typeof parent_id !== "undefined") {
+                    callbackurl = callbackurl + "&parentid=" + parent_id;
+                }
+
+                $.post(callbackurl).done(function(data) {
+                    var replies_el = compileReplies({"1" : data});
+                    replies_el.addClass('replies'); 
+
+                    var replies = topic.find(".replies");
+                    if (!replies.is(":visible")) {
+                        topic.find(".replies").slideDown();
+                    }
+ 
+                    replies_el.hide();
+                    parent.append(replies_el);
+                    replies_el.slideDown();       
+                });
+
+                // remove form
+                $(this).remove();
+            });
 
             function refreshTopics() {
                 $.get('/topic/all', function(data) {
@@ -58,25 +136,11 @@
                             link = (link.length > 1) ? link[1] : link[0];
                         }
 
-                        topic_el = $("<li class='topic'>" + text
-                                + " <span class='link'>(<a href='" + "http://" + link + "'>" + link + "</a>)</span><br />"
-                                + "<span class='subtext'>" + weight + " points | " 
-                                + Object.keys(replies).length + " replies</span></li>");
-
-                        function compileReplies(some_replies) {
-                            var reply_list = $("<ol></ol>");
-                            for (var k in some_replies) {
-                                var reply = $("<li>" + some_replies[k].text + "</li>");
-
-                                console.log(Object.keys(some_replies[k].replies).length);
-                                if (Object.keys(some_replies[k].replies).length > 0) {
-                                    reply.append(compileReplies(some_replies[k].replies));
-                                }
-                                reply_list.append(reply);
-                            }
-
-                            return reply_list;
-                        }
+                        topic_el = $("<li class='topic' data-topicid='" + id + "'>" 
+                                + "<span class='text'>" + text + "</span>"
+                                + " (<a href='" + "http://" + link + "'>" + link + "</a>)<br />" + weight + " points | " 
+                                + Object.keys(replies).length + " replies | "
+                                + "<button class='addReply'>add reply</button></li>");
                         
                         var replies_el = compileReplies(replies);
                         replies_el.addClass('replies');
@@ -84,8 +148,8 @@
                         topic_el.append(replies_el);
                         replies_el.hide();
 
-                        topic_el.click(function() {
-                            $(this).find(".replies").slideToggle();
+                        topic_el.find(".text").click(function() {
+                            $(this).parent().find(".replies").slideToggle();
                         });
 
                         $("#topics").append(topic_el);
