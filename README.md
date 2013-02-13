@@ -1,6 +1,8 @@
 Pumpkin
 =======
 
+Note: This README is in Markdown language. It is best viewed here: https://gist.github.com/fananta/4925180
+
 User moderated open commenting system
 running on Fahd's CDF port: 127.0.0.1:30925/
 
@@ -29,6 +31,7 @@ For pre-populating and/or testing, run the REST URLs provided in test_URLs.txt.
 
 The system uses an Object to store a sequence of topics. Each topic is the root 
 of a tree-like structure. The children and subsequent branches are replies.
+
 |||
 |---|---|
 | **Topics** | ```All topics are stored in an object``` |
