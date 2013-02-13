@@ -101,6 +101,8 @@ http.createServer(function(request, response) {
         /***** HANDLERS *****/
         var handle = {}
         handle["/"] = displayIndex;
+        handle["/lightpaperfibers.png"] = displayStaticBG;
+        handle["/jquery-1.9.0.min.js"] = displayStaticJQuery;
         handle["/topic/all"] = getAllTopics;
         handle["/topic/add"] = addTopic;
         handle["/topic/reply/all"] = getAllReplies; //for specified topic
@@ -203,6 +205,31 @@ http.createServer(function(request, response) {
                 });
         }
 
+        /* serve static files */
+        function displayStaticBG(request, response) {
+            fs.readFile("./lightpaperfibers.png", function(error, content) {
+                    if (error) {
+                        _displayError(response, 404);
+                    }
+                    else {
+                        _writeHead(response, 200, "png");
+                        _writeBody(response, content)
+                    }
+                });
+        }
+
+        function displayStaticJQuery(request, response) {
+            fs.readFile("./jquery-1.9.0.min.js", function(error, content) {
+                    if (error) {
+                        _displayError(response, 404);
+                    }
+                    else {
+                        _writeHead(response, 200, "js");
+                        _writeBody(response, content)
+                    }
+                });
+        }
+
         /***** HELPER FUNCTIONS *****/
 
         /* error handler */
@@ -216,8 +243,10 @@ http.createServer(function(request, response) {
         function _writeHead(response, html_code, content_type) {
             if (content_type === "plain" || content_type === "html") {
                 content_type = "text/" + content_type;
-            } else if (content_type === "json") {
+            } else if (content_type === "json" || content_type === "js") {
                 content_type = "application/" + content_type;
+            } else if (content_type === "png") {
+                content_type = "image/" + content_type;
             } else {
                 content_type = "text/plain";
             }

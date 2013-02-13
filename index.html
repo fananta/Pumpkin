@@ -18,7 +18,7 @@
 
         body {
             text-align: center;
-            background-image: url(http://subtlepatterns.com/patterns/lightpaperfibers.png);
+            background-image: url(lightpaperfibers.png);
         }
 
         button {
@@ -88,7 +88,7 @@
         }
     </style>
 
-    <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+    <script src="jquery-1.9.0.min.js"></script>
     <script type="text/javascript"> 
 
         var reply_form_html = "<form class='addReplyForm' action=''>" 
@@ -270,7 +270,7 @@
 
                 //clear form fields
                 $(this).find("input[name=text]").val("");
-                $(this).find("input[type=link]").val("");
+                $(this).find("input[name=link]").val("");
             });
 			
             refreshTopics();
