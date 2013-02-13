@@ -1,24 +1,9 @@
-TODO
-
-upvotes function - Peter
-
-need to sort on clientside - Peter
-
-comment for index.html - Peter and Lionheart
-
-need to create RESTurl test cases for upvotes - Lionheart
-
-need to download jQuery.min to our repository  - Lionheart
-
-need to finish documenetation for User-Defined Objects, what they actually do - Lionheart
-
 Pumpkin
 =======
 
 User moderated open commenting system
 running on Fahd's CDF port: 127.0.0.1:30925/
 
-Arthors: [CDF account name to be added]
 Peter Le Bek
 peter@hyperplex.org
 
@@ -31,8 +16,19 @@ raymondxiwei@gmail.com
 Zheng Xiong (Lionheart)
 lionheart.xiong@gmail.com
 
-# User-Defined Objects and Data Structures
-#### All topics and replies are stored in a tree-like structure ####
+# Usage #
+
+For pre-populating and/or testing, run the REST URLs provided in test_URLs.txt.
+
+- Clicking on the link of a topic will take you to that link.
+- Clicking on the topic title will show all replies to that topic
+- Clicking on "add reply" will allow you to add a reply to the parent
+- You can submit new topics through the form at the bottom
+
+# How it all works #
+
+The system uses an Object to store a sequence of topics. Each topic is the root 
+of a tree-like structure. The children and subsequent branches are replies.
 |||
 |---|---|
 | **Topics** | ```All topics are stored in an object``` |

@@ -1,0 +1,39 @@
+
+#1 - Adding topics:
+
+http://127.0.0.1:30925/topic/add?text=Show%20HN%3A%20Chime%20-%20A%20Notification%20Center%20for%20the%20Web&link=chimeapp.com
+
+http://127.0.0.1:30925/topic/add?text=Retirement%3A%20day%201&link=http://i.imgur.com/KcxbdCt.png
+
+#2 - Adding replies:
+
+http://127.0.0.1:30925/topic/reply/add?topicid=0&text=Just%20launched%205%20days%20ago!%20Over%20100k%20notifications%20served.
+
+http://127.0.0.1:30925/topic/reply/add?topicid=0&text=Color%20me%20impressed%20gentlemen.%20A%20useful%20idea%20with%20great%20execution.
+
+http://127.0.0.1:30925/topic/reply/add?topicid=1&text=looking%20for%3A%20Male%20between%20ages%3A%202-15
+
+#3 - Adding nested replies
+
+http://127.0.0.1:30925/topic/reply/add?topicid=0&parentid=2&text=Awesome!
+
+http://127.0.0.1:30925/topic/reply/add?topicid=0&parentid=2&text=Very%20neat.
+
+http://127.0.0.1:30925/topic/reply/add?topicid=1&parentid=4&text=You%2C%20sir%2C%20are%20terrible.
+
+http://127.0.0.1:30925/topic/reply/add?topicid=1&parentid=7&text=It's%20papaly%20right%20though.
+
+http://127.0.0.1:30925/topic/reply/add?topicid=1&parentid=8&text=I%20see%20what%20you%20did%20there.
+
+#4 - Voting
+
+http://127.0.0.1:30925/topic/reply/upvote?replyid=2
+http://127.0.0.1:30925/topic/reply/upvote?replyid=4
+http://127.0.0.1:30925/topic/reply/upvote?replyid=4
+
+
+
+
+
+
+
