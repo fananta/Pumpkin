@@ -4,19 +4,6 @@ Pumpkin
 Note: This README is in Markdown language. It is best viewed here: https://gist.github.com/fananta/4925180
 
 User moderated open commenting system
-running on Fahd's CDF port: 127.0.0.1:30925/
-
-Peter Le Bek
-peter@hyperplex.org
-
-Fahd Ananta
-f.ananta@gmail.com
-
-Xiwei Yin (Raymond)
-raymondxiwei@gmail.com
-
-Zheng Xiong (Lionheart)
-lionheart.xiong@gmail.com
 
 # Usage #
 
