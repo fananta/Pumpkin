@@ -1,8 +1,6 @@
 Pumpkin
 =======
 
-Note: This README is in Markdown language. It is best viewed here: https://gist.github.com/fananta/4925180
-
 User moderated open commenting system
 
 # Usage #
